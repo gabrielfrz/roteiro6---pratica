@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  ubuntu-server:
+    image: ubuntu:20.04
+    container_name: ubuntu_server
+    command: sleep infinity
+    networks:
+      - net1
+    depends_on:
+      - mysql_db
+
+  centos-server:
+    image: centos:7
+    container_name: centos_server
+    command: sleep infinity
+    networks:
+      - net2
+    depends_on:
+      - postgres_db
+
+  mysql_db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: testdb
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - net1
+
+  postgres_db:
+    image: postgres:14
+    container_name: postgres_db
+    environment:
+      POSTGRES_PASSWORD: rootpass
+      POSTGRES_DB: testdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - net2
+
+volumes:
+  mysql_data:
+  postgres_data:
+
+networks:
+  net1:
+  net2:
